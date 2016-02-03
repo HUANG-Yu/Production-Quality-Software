@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CanvasApplication" default="runUnitTest" basedir=".">
+	<description>
+		Compile, run and test the projects.
+	</description>
+
+	<property name="src" location="src">
+	</property>
+
+	<property name="testsrc" location="testsrc">
+	</property>
+
+	<property name="build" location="bin">
+	</property>
+
+	<property name="export" location="export">
+	</property>
+
+	<target name="compile" description="compile the project">
+		<mkdir dir="${build}">
+		</mkdir>
+		<javac includeantruntime="yes" srcdir="${src}" destdir="${build}">
+		</javac>
+	</target>
+
+	<target name="run" depends="compile" description="run the compiled project">
+		<java fork="true" classname="nyu.edu.pqs.canvas.app.CanvasApp">
+			<classpath>
+				<pathelement path="${build}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="compileUnitTest" depends="compile"
+		description="compile all the unit tests">
+		<javac includeantruntime="yes" srcdir="${testsrc}" destdir="${build}">
+			<classpath>
+				<pathelement path="${build}">
+				</pathelement>
+				<pathelement location="lib/junit.jar">
+				</pathelement>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="runUnitTest" depends="compileUnitTest"
+		description="run the compiled unit test">
+		<junit fork="yes">
+			<classpath>
+				<pathelement path="${build}" />
+				<pathelement location="lib/junit.jar" />
+				<pathelement location="lib/hamcrest-core-1.3.jar" />
+			</classpath>
+			<formatter type="plain" usefile="false">
+			</formatter>
+			<batchtest>
+				<fileset dir="${build}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="clean" description="clean the relevant directories">
+		<delete dir="${build}" failonerror="false">
+		</delete>
+	</target>
+	
+	<target name="export" depends="compile" description="export the project into jar">
+		<jar jarfile="${export}/CanvasApp.jar" basedir="${build}">
+		</jar>
+	</target>
+</project>
